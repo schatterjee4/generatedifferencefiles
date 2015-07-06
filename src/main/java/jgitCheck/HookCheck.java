@@ -8,7 +8,7 @@ import org.eclipse.jgit.transport.ReceivePack;
 
 public class HookCheck implements PostReceiveHook{
 
-    public void onPostReceive(ReceivePack arg0, Collection<ReceiveCommand> arg1) {
+    public void onPostReceive(ReceivePack rcPck, Collection<ReceiveCommand> arg1) {
         
         
     }
