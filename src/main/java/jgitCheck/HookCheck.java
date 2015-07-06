@@ -10,7 +10,6 @@ public class HookCheck implements PostReceiveHook{
 
     public void onPostReceive(ReceivePack rcPck, Collection<ReceiveCommand> arg1) {
         
-        
     }
 
 }
