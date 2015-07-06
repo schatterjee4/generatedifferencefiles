@@ -4,7 +4,24 @@
   <artifactId>jgitCheck</artifactId>
   <version>0.0.1-SNAPSHOT</version>
 
-   
+   <repositories>
+	<repository>
+			  <id>jgit-repository</id>
+			  <url>https://repo.eclipse.org/content/groups/releases/</url>
+			</repository>
+			<repository>
+			<id>jgit-snapshot-repository</id>
+			<url>https://repo.eclipse.org/content/groups/jgit/</url>
+			<snapshots>
+			  <enabled>true</enabled>
+			</snapshots>
+		  </repository>
+			<repository>
+			<snapshots />
+				<id>gitblit</id>
+				<url>http://gitblit.github.io/gitblit-maven/</url>
+			</repository>	
+	</repositories>
 
   <!-- Core Library -->
   <dependencies>
@@ -13,7 +30,11 @@
       <artifactId>org.eclipse.jgit</artifactId>
       <version>4.0.1.201506240215-r</version>
     </dependency>
- 
+		<dependency>
+			<groupId>com.gitblit</groupId>
+			<artifactId>gitblit</artifactId>
+			<version>1.6.2</version>
+		</dependency>
 
   <!-- Smart HTTP Servlet -->
  
