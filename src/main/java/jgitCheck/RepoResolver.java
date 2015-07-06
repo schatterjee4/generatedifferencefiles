@@ -14,7 +14,7 @@ public class RepoResolver<X> extends FileResolver<X> {
     throws RepositoryNotFoundException, ServiceNotEnabledException {
     Repository repo = super.open(req, name);
 
-    System.out.println(name);
+    System.out.println("kkkk");
     return repo;
     }
 }
