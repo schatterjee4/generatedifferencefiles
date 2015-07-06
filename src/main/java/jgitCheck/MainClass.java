@@ -14,7 +14,7 @@ public class MainClass {
        
             File gitWorkDir = new File("C:/temp/gittest/");
             Git git;
-            System.out.println("hepsl");
+            System.out.println("hepsddl");
             try {
                 git = Git.open(gitWorkDir);
                 Repository repo = git.getRepository();
