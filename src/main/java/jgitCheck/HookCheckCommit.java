@@ -9,7 +9,7 @@ import org.eclipse.jgit.transport.ReceivePack;
 public class HookCheckCommit implements PreReceiveHook {
 
     public void onPreReceive(ReceivePack arg0, Collection<ReceiveCommand> arg1) {
-System.out.println("arggj0s"+arg0);        
+System.out.println("arggj0dds"+arg0);        
     }
 
     
