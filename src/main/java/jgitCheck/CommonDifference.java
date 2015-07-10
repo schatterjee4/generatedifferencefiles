@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
@@ -41,15 +42,18 @@ public class CommonDifference {
     oldTreeIter.reset(reader, oldHead);
     CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
     newTreeIter.reset(reader, newHead);
+    DiffFormatter formatter = new DiffFormatter( System.out );
+    formatter.setRepository( repo );
 
     // finally get the list of changed files
     List<DiffEntry> diffs= new Git(repo).diff()
                         .setNewTree(newTreeIter)
                         .setOldTree(oldTreeIter)
                         .call();
-            for (DiffEntry entry : diffs) {
-                System.out.println("Entry: " + entry);
-            }
+    for( DiffEntry entry : diffs ) {
+        System.out.println( "Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId() );
+        formatter.format( entry );
+      }
             System.out.println("Done");
         } catch (IOException e) {
             // TODO Auto-generated catch block
