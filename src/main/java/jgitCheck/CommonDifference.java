@@ -2,17 +2,24 @@ package jgitCheck;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.wicket.util.diff.Diff;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ListBranchCommand.ListMode;
 import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.EditList;
+import org.eclipse.jgit.diff.MyersDiff;
 import org.eclipse.jgit.diff.RawText;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -60,10 +67,39 @@ public class CommonDifference {
         formatter.format( entry );
         formatter.setContext(0);
         String diff=new String(arrayOutputStream.toByteArray(), "UTF-8");
-        RawText a = new RawText(arrayOutputStream.toByteArray()); 
+       
+       
         ObjectLoader ldr = reader.open(entry.getOldId().toObjectId()); 
-       ldr.getCachedBytes(1*1024*1024); 
-        //System.out.println(diff);
+       final byte[] cachedBytes = ldr.getCachedBytes(1*1024*1024); 
+       RawText a = new RawText(cachedBytes);
+       ObjectLoader ldrOne = reader.open(entry.getNewId().toObjectId()); 
+       final byte[] cachedBytes2 = ldrOne.getCachedBytes(1*1024*1024); 
+       RawText b = new RawText(cachedBytes2);
+
+       final EditList diff2 = MyersDiff.INSTANCE.diff(RawTextComparator.DEFAULT, a, b);
+       
+       
+       for(Edit edit:diff2)
+       {
+           final String extractBefore = extract(a, edit);
+           final String extractAfter = extract(b, edit);
+        //   System.out.println("before\n"+extractBefore+":"+"after\n"+extractAfter);
+
+       }
+       formatter.format(diff2, a, b);
+
+       System.out.println(arrayOutputStream.toString());
+
+       System.out.println("-----------------------------");
+
+       Iterator<Edit> editIte = diff2.iterator();
+       while (editIte.hasNext()) {
+       Edit edit = editIte.next();
+       System.out.println(edit.getType().toString() + " at: "
+       + edit.getEndB());
+       }
+      
+       /* //System.out.println(diff);
         StringBuilder htmlBuilder = new StringBuilder();
         htmlBuilder.append("<html><body>");
         htmlBuilder.append(diff);
@@ -72,7 +108,7 @@ public class CommonDifference {
 
         FileWriter writer = new FileWriter( "hello.html");
         writer.write(htmlBuilder.toString());
-        writer.close();
+        writer.close();*/
       }
             System.out.println("Done");
         } catch (IOException e) {
@@ -82,6 +118,25 @@ public class CommonDifference {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @param a
+     * @param b
+     * @param edit
+     * @throws IOException
+     * @throws UnsupportedEncodingException
+     */
+    private static String extract(RawText a, Edit edit) throws IOException, UnsupportedEncodingException {
+        ByteArrayOutputStream bas = new ByteArrayOutputStream(); 
+          
+               a.writeLine(bas,   edit.getBeginA()); 
+               bas.write('\n'); 
+               a.writeLine(bas,   edit.getEndA()); 
+               bas.write('\n');
+               final String string = new String(bas.toByteArray(), "utf-8"); 
+               System.out.println(string);
+            return string;
     }
 
 }
