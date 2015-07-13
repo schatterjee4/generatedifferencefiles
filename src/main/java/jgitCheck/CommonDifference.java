@@ -1,6 +1,8 @@
 package jgitCheck;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
@@ -10,7 +12,9 @@ import org.eclipse.jgit.api.LogCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.RawText;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectLoader;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
@@ -42,7 +46,8 @@ public class CommonDifference {
     oldTreeIter.reset(reader, oldHead);
     CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
     newTreeIter.reset(reader, newHead);
-    DiffFormatter formatter = new DiffFormatter( System.out );
+    ByteArrayOutputStream arrayOutputStream=new ByteArrayOutputStream();
+    DiffFormatter formatter = new DiffFormatter(arrayOutputStream );
     formatter.setRepository( repo );
 
     // finally get the list of changed files
@@ -53,6 +58,21 @@ public class CommonDifference {
     for( DiffEntry entry : diffs ) {
         System.out.println( "Entry: " + entry + ", from: " + entry.getOldId() + ", to: " + entry.getNewId() );
         formatter.format( entry );
+        formatter.setContext(0);
+        String diff=new String(arrayOutputStream.toByteArray(), "UTF-8");
+        RawText a = new RawText(arrayOutputStream.toByteArray()); 
+        ObjectLoader ldr = reader.open(entry.getOldId().toObjectId()); 
+       ldr.getCachedBytes(1*1024*1024); 
+        //System.out.println(diff);
+        StringBuilder htmlBuilder = new StringBuilder();
+        htmlBuilder.append("<html><body>");
+        htmlBuilder.append(diff);
+        htmlBuilder.append(entry.getChangeType().name());
+        htmlBuilder.append("</body></html>\n");
+
+        FileWriter writer = new FileWriter( "hello.html");
+        writer.write(htmlBuilder.toString());
+        writer.close();
       }
             System.out.println("Done");
         } catch (IOException e) {
