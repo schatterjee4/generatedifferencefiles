@@ -95,7 +95,7 @@ public class CommonDifference {
        Iterator<Edit> editIte = diff2.iterator();
        while (editIte.hasNext()) {
        Edit edit = editIte.next();
-       System.out.println(edit.getType().toString() + " a: "
+       System.out.println(edit.getType().toString() + " at: "
        + edit.getEndB());
        }
       
