@@ -1,14 +1,0 @@
-[33maf46556[m checkD
-[1mdiff --git a/src/main/java/jgitCheck/HookCheckCommit.java b/src/main/java/jgitCheck/HookCheckCommit.java[m
-[1mindex 96d9cef..406f557 100644[m
-[1m--- a/src/main/java/jgitCheck/HookCheckCommit.java[m
-[1m+++ b/src/main/java/jgitCheck/HookCheckCommit.java[m
-[36m@@ -9,7 +9,7 @@[m [mimport org.eclipse.jgit.transport.ReceivePack;[m
- public class HookCheckCommit implements PreReceiveHook {[m
- [m
-     public void onPreReceive(ReceivePack arg0, Collection<ReceiveCommand> arg1) {[m
-[31m-System.out.println("arg0"+arg0);        [m
-[32m+[m[32mSystem.out.println("arggj0s"+arg0);[m[41m        [m
-     }[m
- [m
-     [m
